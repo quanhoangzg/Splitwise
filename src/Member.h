@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <unordered_map>
 using namespace std;
 
 struct Member
@@ -11,6 +12,7 @@ struct Member
     string name;
     int id;
     double balance;
+    //unordered_map<int, double> owes; //store Id of the ones this member owes money
 
     Member(string name, int id, double balance) {
         this->name = name;
@@ -21,8 +23,8 @@ struct Member
     // Tương tự với hàm display, viết luôn code ở đây
     void display() {
         cout << fixed << setprecision(2);
-        cout << "| ID: " << id << " | Ten: " << name
-             << " | So Du: " << balance << " VND" << endl;
+        cout << "| ID: " << id << " | Name: " << name
+             << " | Balance: " << balance << " VND" << endl;
     }
 };
 
