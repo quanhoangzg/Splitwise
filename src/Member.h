@@ -4,27 +4,25 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
-#include <unordered_map>
+
 using namespace std;
 
-struct Member
-{
-    string name;
+struct Member {
     int id;
-    double balance;
-    //unordered_map<int, double> owes; //store Id of the ones this member owes money
+    string name;
+    double balance; // dương thì ngta nợ mình, âm thì mình nợ ng khác
 
-    Member(string name, int id, double balance) {
-        this->name = name;
+    Member(int id, string name, double balance = 0.0) {
         this->id = id;
+        this->name = name;
         this->balance = balance;
     }
 
-    // Tương tự với hàm display, viết luôn code ở đây
-    void display() {
-        cout << fixed << setprecision(2);
-        cout << "| ID: " << id << " | Name: " << name
-             << " | Balance: " << balance << " VND" << endl;
+
+    void display() const {
+        cout << "| ID: " << setw(3) << id 
+             << " | Ten: " << setw(20) << left << name //ten ko qua 20 ki tu de can cho dep
+             << " | So Du: " << setw(10) << right << fixed << setprecision(0) << balance << " VND" << endl;
     }
 };
 

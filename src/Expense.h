@@ -21,11 +21,10 @@ struct Expense
         this->amount = amount;
     }
 
-    void display() {
-        cout << fixed << setprecision(2);
-        cout << "| ID: " << expense_id << " | Mo ta: " << description
-             << " | So tien: " << amount << " VND"
-             << " | Nguoi tra: " << paid_by_member_id << endl;
+    void display() const {
+        cout << "  - [ID: " << expense_id << "] " << description 
+             << " (" << fixed << setprecision(0) << amount << " VND) "
+             << "duoc tra boi ID: " << paid_by_member_id << endl;
     }
 };
 
