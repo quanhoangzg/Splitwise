@@ -18,7 +18,6 @@ public:
     vector<Member> members;
     vector<Expense> expenses;
 
-    // Constructor cho cái Group
     Group(string group_name) {
         this->group_name = group_name;
     }
@@ -26,7 +25,8 @@ public:
     // Thêm thành viên
     void addMember(string memberName) {
         int newId = members.size() + 1;
-        members.push_back(Member(newId, memberName));
+        // Khởi tạo balance = 0, debt = 0
+        members.push_back(Member(newId, memberName, 0.0, 0.0));
         cout << "Da them thanh vien: " << memberName << endl;
     }
 
@@ -100,9 +100,15 @@ public:
 
     
     void displayMembers() {
-        cout << "\n--- DANH SACH THANH VIEN & SO DU ---\n";
+        cout << "\n--- CHI TIET THANH VIEN ---\n";
+        // Header
+        cout << "| ID  | Ten                  | Balance (Cho Thu)| Debt (Phai Tra) |\n";
+        cout << "|-----|----------------------|------------------|-----------------|\n";
         for (const auto &mem : members) {
-            mem.display();
+            cout << "| " << setw(3) << left << mem.id 
+                 << " | " << setw(20) << left << mem.name 
+                 << " | " << setw(13) << right << fixed << setprecision(0) << mem.balance << " | " 
+                 << setw(13) << right << fixed << setprecision(0) << mem.debt << "   |" << endl;
         }
     }
 

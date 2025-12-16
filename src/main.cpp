@@ -31,9 +31,9 @@ int main() {
     
 
     while (true) {
-        cout << "\n====================================\n";
-        cout << "   SPLITWISE MINI (C++) - Chon hoac tao nhom\n";
-        cout << "====================================\n";
+        cout << "\n==========================================\n";
+        cout << "SPLITWISE MINI (C++) - Chon hoac tao nhom\n";
+        cout << "==========================================\n";
         cout << "1. Xem danh sach nhom\n";
         cout << "2. Them nhom\n";
         cout << "3. Xoa nhom\n";
@@ -102,7 +102,7 @@ int main() {
             case 2: {
                 string name;
                 cout << "Nhap ten thanh vien: ";
-                cin.ignore(); 
+                // cin.ignore(); 
                 getline(cin, name);
                 myGroup->addMember(name);
                 break;
@@ -176,7 +176,6 @@ void createGroup() {
         if (filesystem::create_directory(relativePath)) {
             cout << "Tao nhom thanh cong: " << folderName << endl;
         } else {
-            // Điều này thường xảy ra nếu thư mục đã tồn tại
             cout << "Nhom da ton tai: " << folderName << endl;
         }
 
