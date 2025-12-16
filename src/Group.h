@@ -30,26 +30,44 @@ public:
         cout << "Da them thanh vien: " << memberName << endl;
     }
 
-    // Thêm expense => chia tiền
+    // Thêm expense => chia tiền và tự động cấn trừ nợ cũ
     void addExpense(string desc, double amount, int payerId) {
-        if (members.empty()) return; //Nếu ko có thì return ko có j xảy ra
+        if (members.empty()) return;
 
-        int expenseId = expenses.size() + 1; //Thêm expense
-        expenses.push_back(Expense(expenseId, desc, amount, payerId));
+        int expenseId = expenses.size() + 1;
+        expenses.push_back(Expense(expenseId, desc, payerId, amount));
 
-        // Logic chia tiền đều (Split Equally)
         double splitAmount = amount / members.size();
 
         for (auto &mem : members) {
+            // 1. Cộng tiền cho người trả
             if (mem.id == payerId) {
-                // Người trả tiền: Được cộng số tiền đã trả, trừ đi phần của chính họ
-                mem.balance += (amount - splitAmount);
-            } else {
-                // Người hưởng thụ: Bị trừ đi phần tiền phải đóng
+                mem.balance += amount; 
+            }
+
+            // 2. Trừ phần trách nhiệm của mỗi người
+            if (mem.balance >= splitAmount) {
                 mem.balance -= splitAmount;
+            } else {
+                double remaining = splitAmount - mem.balance;
+                mem.balance = 0;
+                mem.debt += remaining;
+            }
+
+            
+            if (mem.balance > 0 && mem.debt > 0) {
+                // Khi có đủ tiền trả nợ
+                if (mem.balance >= mem.debt) {
+                    mem.balance -= mem.debt; 
+                    mem.debt = 0;            
+                } else {
+                    // Có tiền nhưng chưa đủ trả hết nợ cũ
+                    mem.debt -= mem.balance; 
+                    mem.balance = 0;         
+                }
             }
         }
-        cout << "Da ghi nhan khoan chi: " << desc << endl;
+        cout << "Da ghi nhan: " << desc << " | Moi nguoi chiu: " << (long)splitAmount << endl;
     }
 
     // Chia đều kiểu Water Filling
@@ -89,36 +107,33 @@ public:
             return a->balance < b->balance;
         });
 
-        // Vòng lặp phân phối tiền
         while (actualPay > 0.001 && !creditors.empty()) { // > 0.001 để tránh lỗi làm tròn số thực
-            double share = actualPay / creditors.size(); // Mức chia đều lý thuyết
+            double share = actualPay / creditors.size(); // Mức chia đều theo lý thuyết
             
             // Lấy người cần thu ít nhất hiện tại
             Member* smallestCreditor = creditors.front(); 
 
             if (share >= smallestCreditor->balance) {
-                // TRƯỜNG HỢP 1: Nếu chia đều thì ông nhỏ nhất bị dư tiền
-                // -> Chỉ trả đủ số ổng cần thôi
+                // Case 1: người ít nhất bị trả dư tiền
                 double paidAmount = smallestCreditor->balance;
                 
-                smallestCreditor->balance = 0; // Ông này đã nhận đủ
+                smallestCreditor->balance = 0; // nhận đủ
                 actualPay -= paidAmount;       // Trừ tiền trong quỹ
                 
                 cout << "   -> Tra het cho " << smallestCreditor->name 
                      << ": " << (long)paidAmount << " VND (Xong)\n";
 
-                // Loại ông này ra khỏi danh sách nhận tiền, để tiền thừa chia cho người khác
+                // Loại người này ra để chia cho ng khác
                 creditors.erase(creditors.begin());
             } 
             else {
-                // TRƯỜNG HỢP 2: Tiền ít quá, chia đều không ai bị dư cả
-                // -> Chia hết sạch tiền luôn cho mọi người còn lại
+                // Case 2: Ko bị vượt thì chia sạch
                 for (auto* cred : creditors) {
                     cred->balance -= share;
                     cout << "   -> Tra mot phan cho " << cred->name 
                          << ": " << (long)share << " VND (Con du " << (long)cred->balance << ")\n";
                 }
-                actualPay = 0; // Đã tiêu hết tiền
+                actualPay = 0; // Đã tiêu hết tiền => phá loop
             }
         }
         cout << "Da phan phoi xong tien tra no.\n";
