@@ -79,6 +79,7 @@ int main() {
         }
     }
 
+    myGroup->loadData();
     int choice;
     while (true) {
         cout << "\n====================================\n";
@@ -198,7 +199,7 @@ int main() {
 void traverseGroup() {
     string rootPath = "data/"; // Thư mục hiện tại 
 
-    cout << "Danh sach cac nhom trong" << rootPath << endl;
+    cout << "Danh sach cac nhom trong " << rootPath << endl;
     cout << "-----------------------------------" << endl;
 
     try {

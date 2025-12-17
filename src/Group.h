@@ -172,21 +172,21 @@ public:
         // Để tránh viết code lặp lại, mình dùng 1 biến stringstream (cần #include <sstream>)
         // HOẶC cách đơn giản nhất cho bạn dễ hiểu là viết 2 dòng song song
         
-        cout << "\n================ TRANG THAI TAI CHINH ================\n";
-        if (isFileOpen) file << "================ TRANG THAI TAI CHINH ================\n";
+        cout << "\n========================== TRANG THAI TAI CHINH ==========================\n";
+        if (isFileOpen) file << "========================== TRANG THAI TAI CHINH ==========================\n";
 
         // In và viết vào file báo cáo danh sách expense
         cout << "[ DANH SACH EXPENSE ]\n";
         if (isFileOpen) file << "[ DANH SACH EXPENSE ]\n";
         for (Expense expense : expenses) {
-            cout << "  (&)" << setw(15) << left << expense.description << " Nguoi tra: "
+            cout << "  (&) " << setw(15) << left << expense.description << " Nguoi tra: "
                  << setw(15) << right << findPayer(expense) << "| So tien:"
-                 << setw(12) << right << (long) expense.amount << "VND\n";
+                 << setw(12) << right << (long) expense.amount << " VND\n";
             
             if (isFileOpen) {
-                file << "  (&)" << setw(15) << left << expense.description << " Nguoi tra: "
+                file << "  (&) " << setw(15) << left << expense.description << " Nguoi tra: "
                  << setw(15) << right << findPayer(expense) << "| So tien:"
-                 << setw(12) << right << (long) expense.amount << "VND\n";
+                 << setw(12) << right << (long) expense.amount << " VND\n";
             }
             
         }
@@ -238,7 +238,7 @@ public:
             if (isFileOpen) file << msg;
         }
 
-        string footer = "======================================================\n";
+        string footer = "==========================================================================\n";
         cout << footer;
         if (isFileOpen) {
             file << footer;
@@ -273,14 +273,68 @@ public:
         string groupFileName = "data/" + group_name + "/save.txt";
         ofstream file(groupFileName);
         if (file.is_open()) {
-            file << expenses.size() << endl;
+            file << expenses.size() << " " << members.size() << endl;
+
+            for (const auto &expense : expenses) {
+                file << expense.expense_id << "|" << expense.description  << "|" << expense.amount << "|" << expense.paid_by_member_id << endl;
+            }
+
             for (const auto &mem : members) {
-                file << mem.id << "|" << mem.name << "|" << mem.balance << endl;
+                file << mem.id << "|" << mem.name << "|" << mem.balance << "|" << mem.debt << endl;
             }
             cout << "Da luu du lieu thanh cong!\n";
             file.close();
         } else {
             cout << "Loi: Khong the mo file de luu!\n";
+        }
+    }
+
+    void loadData() {
+        /*
+            n m (số numberOfExpenses sẽ là số expense, numberOfMembers sẽ là số member)
+            expense
+            members
+        
+        */
+
+        string groupFileName = "data/" + group_name + "/save.txt";
+        ifstream file(groupFileName);
+        if (file.is_open()) {
+            int numberOfExpenses, numberOfMembers;
+            file >> numberOfExpenses >> numberOfMembers;
+
+            for (int i = 0; i < numberOfExpenses; i++) {
+                int expense_id;
+                file >> expense_id;
+                file.ignore();
+                string description;
+                getline(file, description, '|');
+                double amount;
+                file >> amount;
+                file.ignore();
+                int payerId;
+                file >> payerId;
+                expenses.push_back(Expense(expense_id, description, payerId, amount));
+            }
+
+            for (int i = 0; i < numberOfMembers; i++) {
+                int id;
+                string name;
+                double balance;
+                double debt;
+                file >> id;
+                file.ignore();
+                getline(file, name, '|');
+                file >> balance;
+                file.ignore();
+                file >> debt;
+                members.push_back(Member(id, name, balance, debt));
+            }
+            
+            cout << "Da doc du lieu thanh cong!\n";
+            file.close();
+        } else {
+            cout << "File nay chua co du lieu truoc do\n";
         }
     }
 
