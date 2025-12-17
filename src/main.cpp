@@ -89,6 +89,7 @@ int main() {
         cout << "3. Ghi nhan chi tieu (Add Expense)\n";
         cout << "4. Xem bao cao: Ai no ai? (Settlement)\n";
         cout << "5. Luu du lieu ra file\n";
+        cout << "6. Tra tien\n";
         cout << "0. Thoat\n";
         cout << "Nhap lua chon cua ban: ";
         cin >> choice;
@@ -113,12 +114,30 @@ int main() {
                 string desc;//description
 
                 myGroup->displayMembers();
-                cout << "Nhap ID nguoi tra tien: ";
-                cin >> payerId;
-                cout << "Nhap so tien: ";
-                cin >> amount;
+                while (true) {
+                    cout << "Nhap ID nguoi tra tien: ";
+                    if (cin >> payerId && payerId > 0) { 
+                        if (myGroup->memberExists(payerId)) break; 
+                        else cout << "Loi: ID khong ton tai trong nhom!" << endl;
+                    } else {
+                        cout << "Loi: ID phai la mot so nguyen duong!" << endl;
+                        cin.clear(); // Reset error flags
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+                    }
+                }
+
+                while (true) {
+                    cout << "Nhap so tien: ";
+                    if (cin >> amount && amount > 0) {
+                        break;
+                    } else {
+                        cout << "Loi: So tien phai la so duong!" << endl;
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    }
+                }
                 cout << "Nhap noi dung chi tieu: ";
-                cin.ignore();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Robust ignore
                 getline(cin, desc);
 
                 myGroup->addExpense(desc, amount, payerId);
@@ -130,6 +149,39 @@ int main() {
             case 5:
                 // Nhớ tạo folder "data" ngang hàng với folder "src" trước khi chọn cái này
                 myGroup->saveData(); 
+                break;
+            case 6:
+                myGroup->displayMembers();
+                int id;
+                double money;
+
+                while (true) {
+                    cout << "Nhap id cua nguoi tra tien: ";
+                    if (cin >> id) {
+                        if (myGroup->memberExists(id)) {
+                            break;
+                        } else {
+                            cout << "Loi: Thanh vien ko ton tai!\n";
+                        }
+                    } else {
+                        cout << "Loi: ID phai la mot so! " << endl;
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    }
+                }
+
+                while (true) {
+                    cout << "Nhap so tien phai tra: ";
+                    if (cin >> money && money >= 0) {
+                        break; 
+                    } else {
+                        cout << "Loi: So tien khong hop le (phai la so va >= 0)!" << endl;
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    }
+                }
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                myGroup->payMoney(id, money);
                 break;
             default:
                 cout << "Lua chon khong hop le!\n";
@@ -144,9 +196,9 @@ int main() {
 }
 
 void traverseGroup() {
-    string rootPath = "../data"; // Thư mục hiện tại 
+    string rootPath = "data/"; // Thư mục hiện tại 
 
-    cout << "Danh sach cac nhom" << rootPath << endl;
+    cout << "Danh sach cac nhom trong" << rootPath << endl;
     cout << "-----------------------------------" << endl;
 
     try {
@@ -171,7 +223,7 @@ void createGroup() {
     cout << "Nhap ten nhom moi: ";
     string folderName;
     getline(cin, folderName);
-    string relativePath = "../data/" + folderName;
+    string relativePath = "data/" + folderName;
     try {
         if (filesystem::create_directory(relativePath)) {
             cout << "Tao nhom thanh cong: " << folderName << endl;
@@ -188,7 +240,7 @@ void deleteGroup() {
     cout << "Chon thu muc can xoa: ";
     string targetPath;
     getline(cin, targetPath);
-    string relativePath = "../data/" + targetPath;
+    string relativePath = "data/" + targetPath;
     try {
         // Sử dụng remove_all để xóa thư mục và file lưu bên trong
         uintmax_t count = filesystem::remove_all(relativePath);
@@ -210,7 +262,7 @@ string findGroup() {
     cout << "Dien ten nhom ban muon tim: ";
     string path;
     getline(cin, path);
-    string relativePath = "../data/" + path;
+    string relativePath = "data/" + path;
     if (filesystem::exists(relativePath) && filesystem::is_directory(relativePath)) {
         return path;
     } else {
