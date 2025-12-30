@@ -212,6 +212,28 @@ int main() {
                 myGroup->changeMemberName(personID, changeName);
                 break;
             }
+            case 8: {
+                cout << "Luu y: Chi co the xoa nhung nguoi da khong con la chu no hay con no va chua bao gio tra cho chi tieu nao!" << endl;
+                myGroup->displayMembers();
+                int personID;
+                while (true) {
+                    cout << "Nhap id cua nguoi muon xoa: ";
+                    if (cin >> personID) {
+                        if (myGroup->memberExists(personID)) {
+                            break;
+                        } else {
+                            cout << "Loi: Thanh vien ko ton tai!\n";
+                        }
+                    } else {
+                        cout << "Loi: ID phai la mot so! " << endl;
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    }
+                }
+                cin.ignore();
+                myGroup->deleteMember(personID);
+                break;
+            }
             default:
                 cout << "Lua chon khong hop le!\n";
         }

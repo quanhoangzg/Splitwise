@@ -32,7 +32,13 @@ public:
 
     // Thêm thành viên
     void addMember(string memberName) {
-        int newId = members.size() + 1;
+        int newId;
+        if (members.empty()) {
+            newId = 1;
+        } else {
+            newId = members.back().id + 1;
+        }
+        
         // Khởi tạo balance = 0, debt = 0
         members.push_back(Member(newId, memberName, 0.0, 0.0));
         cout << "Da them thanh vien: " << memberName << endl;
@@ -349,6 +355,26 @@ public:
         }
     }
 
+    void deleteMember(int personID) {
+        for (Expense ex : expenses) {
+            if (ex.paid_by_member_id == personID) {
+                cout << "Nguoi nay da tra cho chi tieu nao do nen xoa khong hop le!";
+                return;
+            }
+        }
+        
+        for (int i = 0; i < members.size(); i++) {
+            if (members[i].id == personID) {
+                if (members[i].balance == 0 && members[i].debt == 0) {
+                    members.erase(members.begin() + i);
+                    cout << "Da xoa thanh cong!" << endl;
+                } else {
+                    cout << "Xoa khong hop le con debt hoac balance" << endl;
+                }
+                return;
+            }    
+        }
+    }
 };
 
 #endif
