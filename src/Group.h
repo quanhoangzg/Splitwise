@@ -340,6 +340,14 @@ public:
         }
     }
 
+    void changeMemberName(int personID, string newName) {
+        for (int i = 0; i < members.size(); i++) {
+            if (members[i].id == personID) {
+                members[i].name = newName;
+                cout << "Doi ten thanh vien co id la " << personID << " thanh cong!" << endl; 
+            }    
+        }
+    }
 
 };
 

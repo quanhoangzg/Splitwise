@@ -91,6 +91,8 @@ int main() {
         cout << "4. Xem bao cao: Ai no ai? (Settlement)\n";
         cout << "5. Luu du lieu ra file\n";
         cout << "6. Tra tien\n";
+        cout << "7. Doi ten thanh vien\n";
+        cout << "8. Xoa thanh vien\n";
         cout << "0. Thoat\n";
         cout << "Nhap lua chon cua ban: ";
         cin >> choice;
@@ -184,6 +186,32 @@ int main() {
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 myGroup->payMoney(id, money);
                 break;
+            case 7: {
+                myGroup->displayMembers();
+                int personID;
+                while (true) {
+                    cout << "Nhap id cua nguoi muon doi ten: ";
+                    if (cin >> personID) {
+                        if (myGroup->memberExists(personID)) {
+                            break;
+                        } else {
+                            cout << "Loi: Thanh vien ko ton tai!\n";
+                        }
+                    } else {
+                        cout << "Loi: ID phai la mot so! " << endl;
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    }
+                }
+
+                
+                cout << "Nhap ten muon doi: ";
+                cin.ignore();
+                string changeName;
+                getline(cin, changeName);
+                myGroup->changeMemberName(personID, changeName);
+                break;
+            }
             default:
                 cout << "Lua chon khong hop le!\n";
         }
