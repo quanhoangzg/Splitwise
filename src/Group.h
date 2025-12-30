@@ -186,8 +186,10 @@ public:
     // --- DANH SÁCH EXPENSE ---
     cout << "[ DANH SACH EXPENSE ]\n";
     if (isFileOpen) file << "[ DANH SACH EXPENSE ]\n";
-    
+    double totalEx = 0;
     for (Expense expense : expenses) {
+        totalEx += expense.amount;
+
         // In ra màn hình
         cout << "  (&) " << setw(15) << left << expense.description << " Nguoi tra: "
              << setw(15) << right << findPayer(expense) << "| So tien:"
@@ -203,6 +205,9 @@ public:
     cout << '\n';
     if (isFileOpen) file << '\n';
 
+    cout << "Tong chi tieu la: " << totalEx << '\n';
+    if (isFileOpen) file << "Tong chi tieu la: " << totalEx << '\n';
+    
     bool allClear = true;
 
     // --- DANH SÁCH NGƯỜI NỢ ---
