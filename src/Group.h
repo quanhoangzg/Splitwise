@@ -159,93 +159,95 @@ public:
 
     // Xuất và báo cáo ra file
     void showSettlement() {
-        string fileName = "bills/" + group_name + "_bao_cao.txt";
-        ofstream file(fileName);
+    string fileName = "bills/" + group_name + "_bao_cao.txt";
+    ofstream file(fileName);
+
+    bool isFileOpen = file.is_open();
+    if (!isFileOpen) {
+        cout << "[Canh bao] Khong tim thay thu muc 'bills' hoac khong the tao file!\n";
+        cout << "Chi hien thi tren man hinh console.\n";
+    }
+
+    // Cấu hình định dạng số cho cout và file ngay từ đầu
+    // fixed: cố định định dạng số thực
+    // setprecision(2): lấy 2 chữ số sau dấu phẩy
+    cout << fixed << setprecision(2);
+    if (isFileOpen) file << fixed << setprecision(2);
+
+    cout << "\n========================== TRANG THAI TAI CHINH ==========================\n";
+    if (isFileOpen) file << "========================== TRANG THAI TAI CHINH ==========================\n";
+
+    // --- DANH SÁCH EXPENSE ---
+    cout << "[ DANH SACH EXPENSE ]\n";
+    if (isFileOpen) file << "[ DANH SACH EXPENSE ]\n";
+    
+    for (Expense expense : expenses) {
+        // In ra màn hình
+        cout << "  (&) " << setw(15) << left << expense.description << " Nguoi tra: "
+             << setw(15) << right << findPayer(expense) << "| So tien:"
+             << setw(12) << right << (double)expense.amount << " VND\n";
         
-        bool isFileOpen = file.is_open();
-        if (!isFileOpen) {
-            cout << "[Canh bao] Khong tim thay thu muc 'bills' hoac khong the tao file!\n";
-            cout << "Chi hien thi tren man hinh console.\n";
-        }
-
-        // 2. Bắt đầu in và ghi file
-        // Để tránh viết code lặp lại, mình dùng 1 biến stringstream (cần #include <sstream>)
-        // HOẶC cách đơn giản nhất cho bạn dễ hiểu là viết 2 dòng song song
-        
-        cout << "\n========================== TRANG THAI TAI CHINH ==========================\n";
-        if (isFileOpen) file << "========================== TRANG THAI TAI CHINH ==========================\n";
-
-        // In và viết vào file báo cáo danh sách expense
-        cout << "[ DANH SACH EXPENSE ]\n";
-        if (isFileOpen) file << "[ DANH SACH EXPENSE ]\n";
-        for (Expense expense : expenses) {
-            cout << "  (&) " << setw(15) << left << expense.description << " Nguoi tra: "
-                 << setw(15) << right << findPayer(expense) << "| So tien:"
-                 << setw(12) << right << (long) expense.amount << " VND\n";
-            
-            if (isFileOpen) {
-                file << "  (&) " << setw(15) << left << expense.description << " Nguoi tra: "
-                 << setw(15) << right << findPayer(expense) << "| So tien:"
-                 << setw(12) << right << (long) expense.amount << " VND\n";
-            }
-            
-        }
-        cout << '\n';
-        file << '\n';
-
-        bool allClear = true;
-
-        // Danh sách người nợ
-        cout << "[ DANH SACH NGUOI NO ]\n";
-        if (isFileOpen) file << "[ DANH SACH NGUOI NO ]\n";
-
-        for (const auto &mem : members) {
-            if (mem.debt > 0) {
-                // In ra màn hình
-                cout << "  (!) " << setw(15) << left << mem.name << " no: " 
-                     << setw(10) << right << (long)mem.debt << " VND\n";
-                
-                // Ghi vào file
-                if (isFileOpen) {
-                    file << "  (!) " << setw(15) << left << mem.name << " no: " 
-                         << setw(10) << right << (long)mem.debt << " VND\n";
-                }
-                allClear = false;
-            }
-        }
-
-        // Danh sách của chủ nợ
-        cout << "\n[ DANH SACH CHU NO ]\n";
-        if (isFileOpen) file << "\n[ DANH SACH CHU NO ]\n";
-
-        for (const auto &mem : members) {
-            if (mem.balance > 0) {
-                cout << "  ($) " << setw(15) << left << mem.name << " cho thu: " 
-                     << setw(10) << right << (long)mem.balance << " VND\n";
-                
-                if (isFileOpen) {
-                    file << "  ($) " << setw(15) << left << mem.name << " cho thu: " 
-                         << setw(10) << right << (long)mem.balance << " VND\n";
-                }
-                allClear = false;
-            }
-        }
-
-        // --- TỔNG KẾT ---
-        if (allClear) {
-            string msg = "\n>> TUYET VOI! Tat ca da thanh toan xong. Khong ai no ai.\n";
-            cout << msg;
-            if (isFileOpen) file << msg;
-        }
-
-        string footer = "==========================================================================\n";
-        cout << footer;
+        // Ghi vào file
         if (isFileOpen) {
-            file << footer;
-            cout << "\n(Da xuat bao cao thanh cong vao file: " << fileName << ")\n";
-            file.close();
+            file << "  (&) " << setw(15) << left << expense.description << " Nguoi tra: "
+                 << setw(15) << right << findPayer(expense) << "| So tien:"
+                 << setw(12) << right << (double)expense.amount << " VND\n";
         }
     }
+    cout << '\n';
+    if (isFileOpen) file << '\n';
+
+    bool allClear = true;
+
+    // --- DANH SÁCH NGƯỜI NỢ ---
+    cout << "[ DANH SACH NGUOI NO ]\n";
+    if (isFileOpen) file << "[ DANH SACH NGUOI NO ]\n";
+
+    for (const auto &mem : members) {
+        if (mem.debt > 0.001) { // So sánh với số nhỏ thay vì 0 để tránh lỗi làm tròn số thực
+            cout << "  (!) " << setw(15) << left << mem.name << " no: " 
+                 << setw(10) << right << (double)mem.debt << " VND\n";
+            
+            if (isFileOpen) {
+                file << "  (!) " << setw(15) << left << mem.name << " no: " 
+                     << setw(10) << right << (double)mem.debt << " VND\n";
+            }
+            allClear = false;
+        }
+    }
+
+    // --- DANH SÁCH CHỦ NỢ ---
+    cout << "\n[ DANH SACH CHU NO ]\n";
+    if (isFileOpen) file << "\n[ DANH SACH CHU NO ]\n";
+
+    for (const auto &mem : members) {
+        if (mem.balance > 0.001) {
+            cout << "  ($) " << setw(15) << left << mem.name << " cho thu: " 
+                 << setw(10) << right << (double)mem.balance << " VND\n";
+            
+            if (isFileOpen) {
+                file << "  ($) " << setw(15) << left << mem.name << " cho thu: " 
+                     << setw(10) << right << (double)mem.balance << " VND\n";
+            }
+            allClear = false;
+        }
+    }
+
+    // --- TỔNG KẾT ---
+    if (allClear) {
+        string msg = "\n>> TUYET VOI! Tat ca da thanh toan xong. Khong ai no ai.\n";
+        cout << msg;
+        if (isFileOpen) file << msg;
+    }
+
+    string footer = "==========================================================================\n";
+    cout << footer;
+    if (isFileOpen) {
+        file << footer;
+        cout << "\n(Da xuat bao cao thanh cong vao file: " << fileName << ")\n";
+        file.close();
+    }
+}
 
     
     void displayMembers() {
@@ -256,8 +258,8 @@ public:
         for (const auto &mem : members) {
             cout << "| " << setw(3) << left << mem.id 
                  << " | " << setw(20) << left << mem.name 
-                 << " | " << setw(16) << right << fixed << setprecision(0) << mem.balance << " | " 
-                 << setw(13) << right << fixed << setprecision(0) << mem.debt << "   |" << endl;
+                 << " | " << setw(16) << right << fixed << setprecision(2) << mem.balance << " | " 
+                 << setw(13) << right << fixed << setprecision(2) << mem.debt << "   |" << endl;
         }
     }
 
