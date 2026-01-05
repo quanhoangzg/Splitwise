@@ -41,21 +41,7 @@ Dựa trên yêu cầu dự án và mã nguồn hiện tại, ứng dụng bao g
     * Dữ liệu (Thành viên, Giao dịch) được lưu vào file `save.txt` trong thư mục của từng nhóm.
     * Tự động nạp lại dữ liệu khi mở lại nhóm.
 
-## 🛠️ Cài đặt & Hướng dẫn sử dụng
-
-### Yêu cầu hệ thống
-* Trình biên dịch C++ hỗ trợ chuẩn **C++17** trở lên (do sử dụng thư viện `<filesystem>`).
-* Hệ điều hành: Windows, Linux, hoặc macOS.
-
-### Cách biên dịch (Compile)
-
-Sử dụng `g++`:
-
-```bash khi ở folder src
-g++ main.cpp -o Splitwise.exe
-
 # 🧮 Giải Thích Thuật Toán (Algorithms Explained)
-
 Tài liệu này mô tả chi tiết hai thuật toán cốt lõi được sử dụng trong dự án Splitwise Mini: **Ghi nhận chi tiêu (Add Expense)** và **Trả nợ (Pay Money / Settlement)**.
 
 ---
@@ -143,3 +129,17 @@ Nếu chia đều ngay từ đầu (mỗi người 50k):
 * Y cần 20k mà nhận 50k -> **Dư 30k** (Sai logic).
 * Z cần 80k mà nhận 50k -> **Thiếu 30k**.
 -> Cách tiếp cận "Water Filling" giải quyết triệt để vấn đề phân phối bất đối xứng này.
+
+## 🛠️ Cài đặt & Hướng dẫn sử dụng
+
+### Yêu cầu hệ thống
+* Trình biên dịch C++ hỗ trợ chuẩn **C++17** trở lên (do sử dụng thư viện `<filesystem>`).
+* Hệ điều hành: Windows, Linux, hoặc macOS.
+
+### Cách biên dịch (Compile)
+
+Sử dụng `g++`:
+
+```bash khi ở folder src
+g++ main.cpp -o Splitwise.exe
+
