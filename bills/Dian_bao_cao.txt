@@ -1,0 +1,14 @@
+========================== TRANG THAI TAI CHINH ==========================
+[ DANH SACH EXPENSE ]
+  (&)                 Nguoi tra:            Mike| So tien:      400.00 VND
+  (&) di an           Nguoi tra:            Quan| So tien:      800.00 VND
+
+Tong chi tieu la: 1200.00
+[ DANH SACH NGUOI NO ]
+  (!) Mike            no:     100.00 VND
+  (!) Bob             no:     300.00 VND
+  (!) Jane            no:     200.00 VND
+
+[ DANH SACH CHU NO ]
+  ($) Quan            cho thu:     600.00 VND
+==========================================================================

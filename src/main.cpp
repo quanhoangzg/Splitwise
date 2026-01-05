@@ -60,6 +60,7 @@ int main() {
                 deleteGroup();
                 break;
             case 4:
+                traverseGroup();
                 myGroupName = findGroup();
                 if (myGroupName != "") {
                     myGroup = new Group(myGroupName);
