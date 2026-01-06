@@ -1,0 +1,8 @@
+3 4
+1|Lan ung tien|220000|1
+2|Mai ung tien|250000|2
+3|Tuan ung tien|330000|3
+1|Lan|20000|0
+2|Mai|50000|0
+3|Tuan|130000|0
+4|Hung|0|200000
